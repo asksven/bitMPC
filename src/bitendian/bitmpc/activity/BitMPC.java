@@ -476,7 +476,7 @@ public class BitMPC extends Activity {
 
 	void raiseRSSProgressDialog() { raiseProgressDialog(getString(R.string.progress_searching)); }
 	
-	void dismissProgressDialog() { if (progress.isShowing()) progress.dismiss(); }
+	void dismissProgressDialog() { if ((progress != null) && (progress.isShowing())) progress.dismiss(); }
 
 	void showPasswordErrorDialog() {
 		MessageDialog dialog = new MessageDialog(this);
