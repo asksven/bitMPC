@@ -24,16 +24,18 @@ package bitendian.bitmpc.main;
 
 import java.util.Hashtable;
 
-public class StatusItem extends Hashtable<String, String> {
+public class StatusItem extends Hashtable<String, String>
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public void add(String _text) {
+	public void add(String _text)
+	{
 		String[] parts = _text.split(":", 2);
 		put(parts[0].trim(), parts[1].trim());
 	}
-	
+
 }

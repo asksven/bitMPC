@@ -25,7 +25,8 @@ package bitendian.bitmpc.main;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class HostItemList extends ArrayList<HostItem> implements Serializable {
+public class HostItemList extends ArrayList<HostItem> implements Serializable
+{
 
 	/**
 	 * 
@@ -33,13 +34,15 @@ public class HostItemList extends ArrayList<HostItem> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int current = -1;
-	
-	public int getCurrent() {
+
+	public int getCurrent()
+	{
 		return current;
 	}
-	
-	public void setCurrent(int _current) {
+
+	public void setCurrent(int _current)
+	{
 		current = _current;
 	}
-	
+
 }

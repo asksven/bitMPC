@@ -35,20 +35,25 @@ import android.widget.ListView;
 import android.widget.ToggleButton;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 
-public class HostsDialog extends Dialog {
+public class HostsDialog extends Dialog
+{
 
 	private BitMPCHandler handler;
-	
-	public HostsDialog(BitMPC _context) {
+
+	public HostsDialog(BitMPC _context)
+	{
 		super(_context);
 		handler = _context.handler;
 	}
-	
-	public boolean onMenuItemSelected(int _featureId, MenuItem _item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) _item.getMenuInfo();
-		switch (_item.getItemId()) {
+
+	public boolean onMenuItemSelected(int _featureId, MenuItem _item)
+	{
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) _item
+				.getMenuInfo();
+		switch (_item.getItemId())
+		{
 		case R.id.hostscontextedit:
 			handler.editHost(info.position);
 			return true;
@@ -59,46 +64,71 @@ public class HostsDialog extends Dialog {
 			return super.onMenuItemSelected(_featureId, _item);
 		}
 	};
-	
+
 	@Override
-	public void onCreateContextMenu(ContextMenu _menu, View _v, ContextMenuInfo _info) {
+	public void onCreateContextMenu(ContextMenu _menu, View _v,
+			ContextMenuInfo _info)
+	{
 		new MenuInflater(getContext()).inflate(R.menu.hosts, _menu);
 	}
-	
+
 	@Override
-	protected void onCreate(Bundle _savedInstanceState) {
+	protected void onCreate(Bundle _savedInstanceState)
+	{
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.connections);
-		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		getWindow().setLayout(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
 
 		ListView list = (ListView) findViewById(R.id.connections_connections);
 		list.setAdapter(handler.getHostsAdapter());
 		registerForContextMenu(list);
-		
+
 		addListeners();
 	}
 
-	private void addListeners() {
-		findViewById(R.id.connections_add).setOnClickListener(new android.view.View.OnClickListener() { public void onClick(View _v) { handler.newHost(); } });
-		findViewById(R.id.connections_connect).setOnClickListener(new android.view.View.OnClickListener() {
-			
-			public void onClick(View _v) {
-				if (handler.isConected()) handler.disconnect(false);
-				else handler.connect();
-			}
-		});
-		((ListView) findViewById(R.id.connections_connections)).setOnItemClickListener(new OnItemClickListener() { public void onItemClick(AdapterView<?> _arg0, View _arg1, int _arg2, long _arg3) { handler.setCurrentHost((int) _arg3); } });	
+	private void addListeners()
+	{
+		findViewById(R.id.connections_add).setOnClickListener(
+				new android.view.View.OnClickListener() {
+					public void onClick(View _v)
+					{
+						handler.newHost();
+					}
+				});
+		findViewById(R.id.connections_connect).setOnClickListener(
+				new android.view.View.OnClickListener() {
+
+					public void onClick(View _v)
+					{
+						if (handler.isConected())
+							handler.disconnect(false);
+						else
+							handler.connect();
+					}
+				});
+		((ListView) findViewById(R.id.connections_connections))
+				.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> _arg0, View _arg1,
+							int _arg2, long _arg3)
+					{
+						handler.setCurrentHost((int) _arg3);
+					}
+				});
 	}
 
 	@Override
-	public void show() {
+	public void show()
+	{
 		super.show();
-		updateToggle();		
+		updateToggle();
 	}
-	
-	public void updateToggle() {
+
+	public void updateToggle()
+	{
 		ToggleButton button = (ToggleButton) findViewById(R.id.connections_connect);
-		if (button != null) button.setChecked(handler.isConected());
+		if (button != null)
+			button.setChecked(handler.isConected());
 	}
-	
+
 }

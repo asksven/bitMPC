@@ -33,56 +33,67 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-
-public class RSSItem implements Serializable {
+public class RSSItem implements Serializable
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
- 	
+
 	private BitmapDrawable image = null;
-	
+
 	private URL url;
-	
+
 	private String title, description;
-	
-	public Drawable getImage() {
+
+	public Drawable getImage()
+	{
 		return image;
 	}
-	
-	public void addImage(String _url) {
-		try {
+
+	public void addImage(String _url)
+	{
+		try
+		{
 			URL urlobject = new URL(_url);
 			InputStream is = (InputStream) urlobject.getContent();
 			image = (BitmapDrawable) Drawable.createFromStream(is, "src");
 			is.close();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 		}
 	}
 
-	public void setTitle(String _title) {
+	public void setTitle(String _title)
+	{
 		title = _title;
 	}
-	
-	public String getTitle() {
-		return title;
-	}
-	
-	@Override
-	public String toString() {
+
+	public String getTitle()
+	{
 		return title;
 	}
 
-	public void setDescription(String _description) {
+	@Override
+	public String toString()
+	{
+		return title;
+	}
+
+	public void setDescription(String _description)
+	{
 		description = _description;
 	}
-	
-	public String getDescription() {
+
+	public String getDescription()
+	{
 		return description;
 	}
-	
-	private void writeObject(java.io.ObjectOutputStream _out) throws IOException {
+
+	private void writeObject(java.io.ObjectOutputStream _out)
+			throws IOException
+	{
 		_out.writeObject(url);
 		_out.writeInt(title.getBytes().length);
 		_out.write(title.getBytes());
@@ -90,49 +101,67 @@ public class RSSItem implements Serializable {
 		_out.writeInt(description.getBytes().length);
 		_out.write(description.getBytes());
 		_out.flush();
-		if (image != null) {
+		if (image != null)
+		{
 			ByteArrayOutputStream test = new ByteArrayOutputStream();
-			if (image.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, test)) {
+			if (image.getBitmap()
+					.compress(Bitmap.CompressFormat.PNG, 100, test))
+			{
 				_out.writeBoolean(true);
-				image.getBitmap().compress(Bitmap.CompressFormat.PNG, 100, _out);
-			} else {
+				image.getBitmap()
+						.compress(Bitmap.CompressFormat.PNG, 100, _out);
+			} else
+			{
 				_out.writeBoolean(false);
 			}
-		} else {
-			_out.writeBoolean(false);			
+		} else
+		{
+			_out.writeBoolean(false);
 		}
 	}
 
-	private void readObject(java.io.ObjectInputStream _in) throws IOException, ClassNotFoundException {
+	private void readObject(java.io.ObjectInputStream _in) throws IOException,
+			ClassNotFoundException
+	{
 		url = (URL) _in.readObject();
 		int size = _in.readInt();
 		byte[] bytes = new byte[512];
 
 		title = "";
 		int readed = 0;
-		while (readed < size) {
-			int buffersize = _in.read(bytes, 0, Math.min(size - readed, bytes.length));
+		while (readed < size)
+		{
+			int buffersize = _in.read(bytes, 0,
+					Math.min(size - readed, bytes.length));
 			title += new String(bytes, 0, buffersize);
 			readed += buffersize;
 		}
-		
+
 		size = _in.readInt();
 		description = "";
 		readed = 0;
-		while (readed < size) {
-			int buffersize = _in.read(bytes, 0, Math.min(size - readed, bytes.length));
+		while (readed < size)
+		{
+			int buffersize = _in.read(bytes, 0,
+					Math.min(size - readed, bytes.length));
 			description += new String(bytes, 0, buffersize);
 			readed += buffersize;
 		}
 
-		if (_in.readBoolean()) { image = new BitmapDrawable(Bitmap.createBitmap(BitmapFactory.decodeStream(_in))); }
+		if (_in.readBoolean())
+		{
+			image = new BitmapDrawable(Bitmap.createBitmap(BitmapFactory
+					.decodeStream(_in)));
+		}
 	}
 
-	public void setURL(URL _url) {
+	public void setURL(URL _url)
+	{
 		url = _url;
 	}
-	
-	public URL getURL() {
+
+	public URL getURL()
+	{
 		return url;
 	}
 

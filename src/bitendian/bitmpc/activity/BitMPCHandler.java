@@ -45,16 +45,17 @@ import bitendian.bitmpc.main.RSSItem;
 /**
  * This class is the handler for others threads to communicate with main thread
  * 
- * This class performs all application logic, like a Controller in a 
- * View - Controller pattern. View - Controller connection is performed by 
- * Adapters whose implements the Model.
+ * This class performs all application logic, like a Controller in a View -
+ * Controller pattern. View - Controller connection is performed by Adapters
+ * whose implements the Model.
  * 
  * You must communicate with this class using messages.
  * 
  * @author juanan
  *
  */
-public class BitMPCHandler extends Handler {
+public class BitMPCHandler extends Handler
+{
 
 	public static final int MESSAGE_CONNECTED = 1;
 	public static final int MESSAGE_NOT_CONNECTED = 2;
@@ -74,57 +75,60 @@ public class BitMPCHandler extends Handler {
 	public static final int MESSAGE_RSS_ERROR = 401;
 	public static final int MESSAGE_NEW_RSS = 402;
 	public static final int MESSAGE_UPDATE_RSS = 403;
-	
+
 	private BitMPC context;
 
 	private Connection connection;
 	private StatusUpdater updater;
-	
+
 	private boolean checkplaylistsize, connected, updating;
 
 	// browse subsystem
 	private BrowseItemAdapter browseAdapter;
 	private Stack<String> folders;
 	private Stack<Integer> folderPositions;
-	
+
 	// search subsystem
 	private PlaylistItemAdapter searchAdapter;
-	
+
 	// rss subsystem
 	private RSSItemAdapter rssAdapter, rssProgramAdapter;
-	
+
 	// playlist subsystem
 	private PlaylistItemAdapter playlistAdapter;
 	private HostsAdapter hostsAdapter;
-	private int currentPlaylist, currentSong, currentVolume, currentRSS, movingPosition;
+	private int currentPlaylist, currentSong, currentVolume, currentRSS,
+			movingPosition;
 	private boolean currentRepeat, currentRandom, gotolastbrowserposition;
 
-	public BitMPCHandler(BitMPC _context) {
+	public BitMPCHandler(BitMPC _context)
+	{
 		context = _context;
-				
+
 		folders = new Stack<String>();
 		folderPositions = new Stack<Integer>();
-		
+
 		gotolastbrowserposition = false;
-		
+
 		// creating adapters
 		// -- volatiles
 		playlistAdapter = new PlaylistItemAdapter(_context, true);
 		browseAdapter = new BrowseItemAdapter(_context);
 		searchAdapter = new PlaylistItemAdapter(_context, false);
 		rssProgramAdapter = new RSSItemAdapter(_context);
-		
+
 		// -- persistents
 		rssAdapter = new RSSItemAdapter(_context);
 		rssAdapter.restore();
 		hostsAdapter = new HostsAdapter(_context);
 		hostsAdapter.restore();
-		
+
 		// initialize player values
 		initializePlayerValues();
 	}
 
-	private void initializePlayerValues() {
+	private void initializePlayerValues()
+	{
 		// logic values
 		connected = false;
 		currentPlaylist = -1;
@@ -132,25 +136,28 @@ public class BitMPCHandler extends Handler {
 		currentVolume = -1;
 		currentRepeat = false;
 		currentRandom = false;
-		
+
 		// volatile adapters
 		playlistAdapter.clear();
 		browseAdapter.clear();
 		searchAdapter.clear();
 	}
-	
-	public void handleMessage(Message _msg) {
-		synchronized (this) {
-			switch (_msg.what) {
+
+	public void handleMessage(Message _msg)
+	{
+		synchronized (this)
+		{
+			switch (_msg.what)
+			{
 			case MESSAGE_CONNECTED:
 				context.dismissProgressDialog();
-				connected = true;					
+				connected = true;
 				// root browse
 				browse();
 				// start status beat
 				updater = new StatusUpdater(context, connection);
 				updater.start();
-			    break;
+				break;
 			case MESSAGE_NOT_CONNECTED:
 				context.toggleHostsDialogButton();
 				context.dismissProgressDialog();
@@ -184,7 +191,8 @@ public class BitMPCHandler extends Handler {
 			case MESSAGE_END_BROWSE:
 				context.dismissProgressDialog();
 				browseAdapter.notifyDataSetChanged();
-				if (gotolastbrowserposition && folderPositions.size() > 0) {
+				if (gotolastbrowserposition && folderPositions.size() > 0)
+				{
 					gotolastbrowserposition = false;
 					context.gotoBrowserPosition(folderPositions.pop());
 				}
@@ -224,75 +232,109 @@ public class BitMPCHandler extends Handler {
 		}
 	}
 
-	private void statusMessage(String _key, String _value) {
-		if ("playlist".equals(_key)) {
+	private void statusMessage(String _key, String _value)
+	{
+		if ("playlist".equals(_key))
+		{
 			int playlist;
-			if ((playlist = Integer.parseInt(_value)) != currentPlaylist) {
-				if (currentPlaylist == -1) {
+			if ((playlist = Integer.parseInt(_value)) != currentPlaylist)
+			{
+				if (currentPlaylist == -1)
+				{
 					connection.doPlaylist();
-				} else {
+				} else
+				{
 					updating = true;
 					connection.doPlaylistUpdate(currentPlaylist);
 				}
 				currentPlaylist = playlist;
 			}
 		}
-		if ("song".equals(_key) && !updating) {
+		if ("song".equals(_key) && !updating)
+		{
 			int song;
-			if ((song = Integer.parseInt(_value)) != currentSong) {
-				if (song < playlistAdapter.getCount()) {
+			if ((song = Integer.parseInt(_value)) != currentSong)
+			{
+				if (song < playlistAdapter.getCount())
+				{
 					currentSong = song;
 					playlistAdapter.setSelected(song);
-					context.setCurrentText(playlistAdapter.getItem(song).toString());
+					context.setCurrentText(playlistAdapter.getItem(song)
+							.toString());
 				}
 			}
 		}
-		if ("time".equals(_key)) {
+		if ("time".equals(_key))
+		{
 			String[] frac = _value.split(":");
-			context.setupSeekBar(Integer.parseInt(frac[0]), Integer.parseInt(frac[1]));
+			context.setupSeekBar(Integer.parseInt(frac[0]),
+					Integer.parseInt(frac[1]));
 		}
-		if ("state".equals(_key)) {
-			if ("stop".equals(_value) &&  context.getStatusIconValue() != BitMPC.StatusIconStatus.STOP) {
+		if ("state".equals(_key))
+		{
+			if ("stop".equals(_value)
+					&& context.getStatusIconValue() != BitMPC.StatusIconStatus.STOP)
+			{
 				context.disableProgressBar();
 				context.setStatusIcon(StatusIconStatus.STOP);
-			} else if ("play".equals(_value) && context.getStatusIconValue() != BitMPC.StatusIconStatus.PLAY) {
+			} else if ("play".equals(_value)
+					&& context.getStatusIconValue() != BitMPC.StatusIconStatus.PLAY)
+			{
 				context.setStatusIcon(StatusIconStatus.PLAY);
-			} else if ("pause".equals(_value) && context.getStatusIconValue() != BitMPC.StatusIconStatus.PAUSE) {
+			} else if ("pause".equals(_value)
+					&& context.getStatusIconValue() != BitMPC.StatusIconStatus.PAUSE)
+			{
 				context.setStatusIcon(StatusIconStatus.PAUSE);
-			}		
+			}
 		}
-		if ("volume".equals(_key)) {
+		if ("volume".equals(_key))
+		{
 			int volume;
-			if ((volume = Integer.parseInt(_value)) != currentVolume) {
+			if ((volume = Integer.parseInt(_value)) != currentVolume)
+			{
 				currentVolume = volume;
 				context.setVolume(volume);
 			}
 		}
-		if ("playlistlength".equals(_key) && checkplaylistsize) {
+		if ("playlistlength".equals(_key) && checkplaylistsize)
+		{
 			checkplaylistsize = false;
 			int size = Integer.parseInt(_value);
-			if (size != playlistAdapter.getCount()) playlistAdapter.head(size);
+			if (size != playlistAdapter.getCount())
+				playlistAdapter.head(size);
 			playlistAdapter.notifyDataSetChanged();
 			updating = false;
-			if (context.getStatusIconValue() == StatusIconStatus.STOP || context.getStatusIconValue() == StatusIconStatus.PAUSE) {
-				if (playlistAdapter.getSelected() != -1 && playlistAdapter.getSelected() < playlistAdapter.getCount()) {
-					PlaylistItem item = (PlaylistItem) playlistAdapter.getItem(playlistAdapter.getSelected());
-					if (Integer.parseInt(item.get("Pos")) == currentSong) context.setCurrentText(item.toString());
-				} else {
+			if (context.getStatusIconValue() == StatusIconStatus.STOP
+					|| context.getStatusIconValue() == StatusIconStatus.PAUSE)
+			{
+				if (playlistAdapter.getSelected() != -1
+						&& playlistAdapter.getSelected() < playlistAdapter
+								.getCount())
+				{
+					PlaylistItem item = (PlaylistItem) playlistAdapter
+							.getItem(playlistAdapter.getSelected());
+					if (Integer.parseInt(item.get("Pos")) == currentSong)
+						context.setCurrentText(item.toString());
+				} else
+				{
 					context.setCurrentText("");
 				}
 			}
 		}
-		if ("repeat".equals(_key)) {
+		if ("repeat".equals(_key))
+		{
 			boolean repeat = "1".equals(_value);
-			if (repeat != currentRepeat) {
+			if (repeat != currentRepeat)
+			{
 				context.selectRepeat(repeat);
 				currentRepeat = repeat;
 			}
 		}
-		if ("random".equals(_key)) {
+		if ("random".equals(_key))
+		{
 			boolean random = "1".equals(_value);
-			if (random != currentRandom) {
+			if (random != currentRandom)
+			{
 				context.selectRandom(random);
 				currentRandom = random;
 			}
@@ -300,65 +342,103 @@ public class BitMPCHandler extends Handler {
 	}
 
 	/*** CONTROL ***/
-	
+
 	// connect system to current host
-	void connect() {
+	void connect()
+	{
 		HostItem host;
-		if (!connected && ((host = hostsAdapter.getCurrent()) != null)) {
-		    context.raiseConnectProgressDialog(host);
+		if (!connected && ((host = hostsAdapter.getCurrent()) != null))
+		{
+			context.raiseConnectProgressDialog(host);
 			// create connection
-		    connection = new Connection(this);
-		    // try to connect (asynchronous)
-		    connection.connect(host);					
-		} else if (hostsAdapter.getCurrent() == null) {
+			connection = new Connection(this);
+			// try to connect (asynchronous)
+			connection.connect(host);
+		} else if (hostsAdapter.getCurrent() == null)
+		{
 			context.showNoHostError();
 		}
 	}
 
-	public boolean isConected() { return connected; }
+	public boolean isConected()
+	{
+		return connected;
+	}
 
 	// disconnect system
-	void disconnect(boolean _finish) {
-		if (connected) {
+	void disconnect(boolean _finish)
+	{
+		if (connected)
+		{
 			// set system status
 			connected = false;
 			// kill status updater
 			updater.end();
 			// close socket
 			connection.close();
-			
-			if (!_finish) {
+
+			if (!_finish)
+			{
 				initializePlayerValues();
 				context.initializeView();
 			}
 		}
 	}
 
-	void previous() { connection.doPrevious(); }
-	
-	void play() { connection.doPlay(); }
-	
-	void next() { connection.doNext(); }
-	
-	void pause() { connection.doPause(); }
-	
-	void stop() { connection.doStop(); }
-	
-	void setVolume(int _volume) { connection.doVolume(_volume); }
-	
-	void seek(int _position) { connection.doSeek(currentSong, _position); }
+	void previous()
+	{
+		connection.doPrevious();
+	}
 
-	void repeat() { connection.doRepeat(!currentRepeat); }
-	
-	void random() { connection.doRandom(!currentRandom); }
+	void play()
+	{
+		connection.doPlay();
+	}
 
-	void magicButton(StatusIconStatus _current) {
-		switch (_current) {
+	void next()
+	{
+		connection.doNext();
+	}
+
+	void pause()
+	{
+		connection.doPause();
+	}
+
+	void stop()
+	{
+		connection.doStop();
+	}
+
+	void setVolume(int _volume)
+	{
+		connection.doVolume(_volume);
+	}
+
+	void seek(int _position)
+	{
+		connection.doSeek(currentSong, _position);
+	}
+
+	void repeat()
+	{
+		connection.doRepeat(!currentRepeat);
+	}
+
+	void random()
+	{
+		connection.doRandom(!currentRandom);
+	}
+
+	void magicButton(StatusIconStatus _current)
+	{
+		switch (_current)
+		{
 		case PLAY:
 			pause();
 			break;
 		case CONNECT:
-			connect();					
+			connect();
 			break;
 		case PAUSE:
 		case STOP:
@@ -366,9 +446,11 @@ public class BitMPCHandler extends Handler {
 			break;
 		}
 	}
-	
-	void longMagicButton(StatusIconStatus _current) {
-		switch (_current) {
+
+	void longMagicButton(StatusIconStatus _current)
+	{
+		switch (_current)
+		{
 		case PAUSE:
 		case PLAY:
 			stop();
@@ -381,56 +463,84 @@ public class BitMPCHandler extends Handler {
 		}
 	}
 
-	void addURL(String _url) { 
+	void addURL(String _url)
+	{
 		connection.doAdd(_url);
-		if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+		if (context.getPreferences().getBoolean(
+				SettingsDialog.SETTING_PLAYONADD, false))
+			connection.doPlay();
 	}
-	
-	void addRSSURL(String _url) {
-		try {
+
+	void addRSSURL(String _url)
+	{
+		try
+		{
 			URL url = new URL(_url);
 			context.raiseRSSProgressDialog();
 			new RSSHandler().handleRSSURL(this, url, false);
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException e)
+		{
 			context.showRSSURLError();
 		}
 	}
 
 	/*** PLAYLIST ***/
-	
-	PlaylistItemAdapter getPlaylistAdapter() { return playlistAdapter; }
-	
-	void playlistRemove(int _position) { 
-		playlistAdapter.showDeleting(_position);
-		connection.doDelete(Integer.parseInt(playlistAdapter.getTItem(_position).get("Pos"))); 
+
+	PlaylistItemAdapter getPlaylistAdapter()
+	{
+		return playlistAdapter;
 	}
-	
-	void playlistClear() { connection.doClear(); }
-	
-	void playlistPlay(int _position) { connection.doPlaylistPlay(_position); }
-	
+
+	void playlistRemove(int _position)
+	{
+		playlistAdapter.showDeleting(_position);
+		connection.doDelete(Integer.parseInt(playlistAdapter
+				.getTItem(_position).get("Pos")));
+	}
+
+	void playlistClear()
+	{
+		connection.doClear();
+	}
+
+	void playlistPlay(int _position)
+	{
+		connection.doPlaylistPlay(_position);
+	}
+
 	/*** BROWSING ***/
 
-	BrowseItemAdapter getBrowseAdapter() { return browseAdapter; }
-	
-	void browseLongAdd(int _position) {
-		BrowseItem item = browseAdapter.getTItem(_position); 
-		switch (item.getType()) {
+	BrowseItemAdapter getBrowseAdapter()
+	{
+		return browseAdapter;
+	}
+
+	void browseLongAdd(int _position)
+	{
+		BrowseItem item = browseAdapter.getTItem(_position);
+		switch (item.getType())
+		{
 		case DIRECTORY:
 		case FILE:
 			connection.doAdd(item.get("file"));
-			if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+			if (context.getPreferences().getBoolean(
+					SettingsDialog.SETTING_PLAYONADD, false))
+				connection.doPlay();
 			break;
 		case PLAYLIST:
 			connection.doLoad(item.toString());
-			if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+			if (context.getPreferences().getBoolean(
+					SettingsDialog.SETTING_PLAYONADD, false))
+				connection.doPlay();
 			break;
 		}
 	}
-	
-	void browseAdd(int _position) {
-		BrowseItem item = browseAdapter.getTItem(_position); 
-		switch (item.getType()) {
+
+	void browseAdd(int _position)
+	{
+		BrowseItem item = browseAdapter.getTItem(_position);
+		switch (item.getType())
+		{
 		case DIRECTORY:
 			folders.push(item.get("file"));
 			folderPositions.push(_position);
@@ -438,93 +548,137 @@ public class BitMPCHandler extends Handler {
 			break;
 		case FILE:
 			connection.doAdd(item.get("file"));
-			if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+			if (context.getPreferences().getBoolean(
+					SettingsDialog.SETTING_PLAYONADD, false))
+				connection.doPlay();
 			break;
 		case PLAYLIST:
 			connection.doLoad(item.toString());
-			if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+			if (context.getPreferences().getBoolean(
+					SettingsDialog.SETTING_PLAYONADD, false))
+				connection.doPlay();
 			break;
 		}
 	}
-	
-	private void browse() {
+
+	private void browse()
+	{
 		// calculating new path
 		String path = folders.isEmpty() ? "/" : folders.peek();
 		context.setBrowsePath(path);
 		// connection must send browse command
 		connection.doBrowse(path);
 	}
-	
-	void browseBack() {
-		if (!folders.isEmpty()) folders.pop();
+
+	void browseBack()
+	{
+		if (!folders.isEmpty())
+			folders.pop();
 		gotolastbrowserposition = true;
 		browse();
 	}
 
 	/*** RSS ***/
 
-	RSSItemAdapter getRSSAdapter() { return rssAdapter; }
-	
-	RSSItemAdapter getRSSProgramAdapter() { return rssProgramAdapter; }
-	
-	void rssRemove(int _position) {
+	RSSItemAdapter getRSSAdapter()
+	{
+		return rssAdapter;
+	}
+
+	RSSItemAdapter getRSSProgramAdapter()
+	{
+		return rssProgramAdapter;
+	}
+
+	void rssRemove(int _position)
+	{
 		rssAdapter.removeItem(_position);
 		rssAdapter.notifyDataSetChanged();
 		rssAdapter.save();
 	}
-	
-	void rssOpen(int _position) {
+
+	void rssOpen(int _position)
+	{
 		currentRSS = _position;
 		context.raiseRSSProgressDialog();
 		rssProgramAdapter.clear();
-		new RSSHandler().handleRSSURL(this, rssAdapter.getTItem(_position).getURL(), true);		
+		new RSSHandler().handleRSSURL(this, rssAdapter.getTItem(_position)
+				.getURL(), true);
 	}
-	
+
 	/*** SEARCH ***/
-	
-	PlaylistItemAdapter getSearchAdapter() { return searchAdapter; }
-	
-	void search(String _type, String _search) { connection.doSearch(_type, _search); }
-	
-	void searchAdd(int _position) {
-		connection.doAdd(searchAdapter.getTItem(_position).get("file"));
-		if (context.getPreferences().getBoolean(SettingsDialog.SETTING_PLAYONADD, false)) connection.doPlay();
+
+	PlaylistItemAdapter getSearchAdapter()
+	{
+		return searchAdapter;
 	}
-	
+
+	void search(String _type, String _search)
+	{
+		connection.doSearch(_type, _search);
+	}
+
+	void searchAdd(int _position)
+	{
+		connection.doAdd(searchAdapter.getTItem(_position).get("file"));
+		if (context.getPreferences().getBoolean(
+				SettingsDialog.SETTING_PLAYONADD, false))
+			connection.doPlay();
+	}
+
 	/*** HOSTS ***/
-	
-	void setCurrentHost(int _current) {
-		if (connected && _current != hostsAdapter.getCurrentPosition()) disconnect(false);
+
+	void setCurrentHost(int _current)
+	{
+		if (connected && _current != hostsAdapter.getCurrentPosition())
+			disconnect(false);
 		hostsAdapter.setCurrent(_current);
 		hostsAdapter.save();
 	}
-	
-	void addHost(HostItem _host) {
+
+	void addHost(HostItem _host)
+	{
 		hostsAdapter.addItem(_host);
 		hostsAdapter.save();
 	}
 
-	void updateHost(HostItem _host) { hostsAdapter.save(); }
+	void updateHost(HostItem _host)
+	{
+		hostsAdapter.save();
+	}
 
-	void editHost(int _position) { context.editHost(hostsAdapter.getTItem(_position)); }
+	void editHost(int _position)
+	{
+		context.editHost(hostsAdapter.getTItem(_position));
+	}
 
-	void deleteHost(int _position) { 
-		hostsAdapter.removeItem(_position); 
+	void deleteHost(int _position)
+	{
+		hostsAdapter.removeItem(_position);
 		hostsAdapter.notifyDataSetChanged();
 	}
 
-	ListAdapter getHostsAdapter() { return hostsAdapter; }
+	ListAdapter getHostsAdapter()
+	{
+		return hostsAdapter;
+	}
 
-	void newHost() { context.showCreateHostDialog(); }
+	void newHost()
+	{
+		context.showCreateHostDialog();
+	}
 
-	public void playlistStartMove(int _position) {
+	public void playlistStartMove(int _position)
+	{
 		movingPosition = _position;
 		playlistAdapter.startMove(_position);
 	}
 
-	public void playlistEndMove(int _position) {
+	public void playlistEndMove(int _position)
+	{
 		playlistAdapter.endMove(_position);
-		if (_position != movingPosition) connection.doMove(movingPosition, _position);
+		if (_position != movingPosition)
+			connection.doMove(movingPosition, _position);
 	}
 
 }

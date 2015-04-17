@@ -36,13 +36,15 @@ import org.xml.sax.XMLReader;
 import android.os.Message;
 import bitendian.bitmpc.activity.BitMPCHandler;
 
-public class RSSHandler extends Thread {
+public class RSSHandler extends Thread
+{
 
 	private URL url;
 	private boolean items;
 	private BitMPCHandler handler;
-	
-	public void handleRSSURL(BitMPCHandler _handler, URL _url, boolean _items) {
+
+	public void handleRSSURL(BitMPCHandler _handler, URL _url, boolean _items)
+	{
 		handler = _handler;
 		url = _url;
 		items = _items;
@@ -51,27 +53,35 @@ public class RSSHandler extends Thread {
 	}
 
 	@Override
-	public void run() {
-		try {
+	public void run()
+	{
+		try
+		{
 			/* Get a SAXParser from the SAXPArserFactory. */
-	        SAXParserFactory spf = SAXParserFactory.newInstance();
-	        SAXParser sp = spf.newSAXParser();
-	
-	        /* Get the XMLReader of the SAXParser we created. */
-	        XMLReader xr = sp.getXMLReader();
-	        /* Create a new ContentHandler and apply it to the XML-Reader*/
-	        RSSParser parser = new RSSParser(handler, url, items);
-	        xr.setContentHandler(parser);
-	        
-	        /* Parse the xml-data from our URL. */
-	        xr.parse(new InputSource(url.openStream()));
-		} catch (SAXException _e) {
-			handler.sendMessage(Message.obtain(handler, BitMPCHandler.MESSAGE_RSS_ERROR));
-		} catch (ParserConfigurationException _e) {
-			handler.sendMessage(Message.obtain(handler, BitMPCHandler.MESSAGE_RSS_ERROR));
-		} catch (IOException _e) {
-			handler.sendMessage(Message.obtain(handler, BitMPCHandler.MESSAGE_RSS_ERROR));
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+			SAXParser sp = spf.newSAXParser();
+
+			/* Get the XMLReader of the SAXParser we created. */
+			XMLReader xr = sp.getXMLReader();
+			/* Create a new ContentHandler and apply it to the XML-Reader */
+			RSSParser parser = new RSSParser(handler, url, items);
+			xr.setContentHandler(parser);
+
+			/* Parse the xml-data from our URL. */
+			xr.parse(new InputSource(url.openStream()));
+		} catch (SAXException _e)
+		{
+			handler.sendMessage(Message.obtain(handler,
+					BitMPCHandler.MESSAGE_RSS_ERROR));
+		} catch (ParserConfigurationException _e)
+		{
+			handler.sendMessage(Message.obtain(handler,
+					BitMPCHandler.MESSAGE_RSS_ERROR));
+		} catch (IOException _e)
+		{
+			handler.sendMessage(Message.obtain(handler,
+					BitMPCHandler.MESSAGE_RSS_ERROR));
 		}
 	}
-	
+
 }

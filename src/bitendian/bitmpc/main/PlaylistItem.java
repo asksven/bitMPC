@@ -24,55 +24,76 @@ package bitendian.bitmpc.main;
 
 import java.util.Hashtable;
 
-public class PlaylistItem extends Hashtable<String, String> {
-	
+public class PlaylistItem extends Hashtable<String, String>
+{
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public PlaylistItem(String _text) {
+	public PlaylistItem(String _text)
+	{
 		String[] parts = _text.split(":", 2);
 		put(parts[0].trim(), parts[1].trim());
 	}
 
-	public void add(String _text) {
+	public void add(String _text)
+	{
 		String[] parts = _text.split(":", 2);
 		put(parts[0].trim(), parts[1].trim());
 	}
 
 	@Override
-	public synchronized String toString() {
+	public synchronized String toString()
+	{
 		String title = get("Title");
-		if (title != null) {
+		if (title != null)
+		{
 			String artist = get("Artist");
 			return (artist != null ? artist + " - " : "") + title;
 		}
-		String[] parts = get("file").split("/"); 
+		String[] parts = get("file").split("/");
 		return parts[parts.length - 1];
 	}
 
-	public synchronized String getTitle() {
+	public synchronized String getTitle()
+	{
 		String title = get("Title");
-		if (title == null) {
-			String[] parts = get("file").split("/"); 
-			title = parts[parts.length - 1];			
+		if (title == null)
+		{
+			String[] parts = get("file").split("/");
+			title = parts[parts.length - 1];
 		}
 		return title;
 	}
-	
-	public synchronized String getArtist() {
+
+	public synchronized String getArtist()
+	{
 		String artist = get("Artist");
 		String album = get("Album");
-		if (artist != null && album != null) artist += " - "  + album;
+		if (artist != null && album != null)
+			artist += " - " + album;
 		return artist;
 	}
 
-	public void setDeleting(boolean _deleting) { put("isDeleting", "" + _deleting); }
-	
-	public boolean isDeleting() { return Boolean.parseBoolean(get("isDeleting")); }
+	public void setDeleting(boolean _deleting)
+	{
+		put("isDeleting", "" + _deleting);
+	}
 
-	public void setMoving(boolean _deleting) { put("isMoving", "" + _deleting); }
-	
-	public boolean isMoving() { return Boolean.parseBoolean(get("isMoving")); }
+	public boolean isDeleting()
+	{
+		return Boolean.parseBoolean(get("isDeleting"));
+	}
+
+	public void setMoving(boolean _deleting)
+	{
+		put("isMoving", "" + _deleting);
+	}
+
+	public boolean isMoving()
+	{
+		return Boolean.parseBoolean(get("isMoving"));
+	}
 }

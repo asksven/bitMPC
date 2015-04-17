@@ -24,7 +24,8 @@ package bitendian.bitmpc.main;
 
 import java.io.Serializable;
 
-public class HostItem implements Serializable {
+public class HostItem implements Serializable
+{
 
 	/**
 	 * 
@@ -32,25 +33,28 @@ public class HostItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public String name;
-	
+
 	public String[] ip;
-	
+
 	public String password;
-	
+
 	public int port;
-	
+
 	public boolean auth;
-	
-	public HostItem(String _name, String[] _ip, int _port, String _password, boolean _auth) {
+
+	public HostItem(String _name, String[] _ip, int _port, String _password,
+			boolean _auth)
+	{
 		name = _name;
 		ip = _ip;
 		port = _port;
 		password = _password;
 		auth = _auth;
 	}
-	
+
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return name;
 	}
 }

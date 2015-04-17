@@ -24,15 +24,23 @@ package bitendian.bitmpc.activity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 import bitendian.bitmpc.activity.BitMPC;
 
-public class MessageDialog extends AlertDialog {
+public class MessageDialog extends AlertDialog
+{
 
-	public MessageDialog(BitMPC _context) {
+	public MessageDialog(BitMPC _context)
+	{
 		super(_context);
 		setTitle(_context.getString(R.string.app_name));
-		setButton(_context.getString(android.R.string.ok), new OnClickListener() { public void onClick(DialogInterface dialog, int which) { dismiss(); } });
+		setButton(_context.getString(android.R.string.ok),
+				new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dismiss();
+					}
+				});
 	}
-	
+
 }

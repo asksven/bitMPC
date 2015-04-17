@@ -24,37 +24,50 @@ package bitendian.bitmpc.main;
 
 import java.util.Hashtable;
 
-public class BrowseItem extends Hashtable<String, String> {
+public class BrowseItem extends Hashtable<String, String>
+{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public enum ItemType { DIRECTORY, FILE, PLAYLIST };
+	public enum ItemType
+	{
+		DIRECTORY, FILE, PLAYLIST
+	};
 
 	private ItemType type;
-	
-	public BrowseItem(String _text) {
+
+	public BrowseItem(String _text)
+	{
 		String[] parts = _text.split(":", 2);
 		parts[0] = parts[0].trim();
-		if ("directory".equals(parts[0])) type = ItemType.DIRECTORY;
-		if ("file".equals(parts[0])) type = ItemType.FILE;
-		if ("playlist".equals(parts[0])) type = ItemType.PLAYLIST;
+		if ("directory".equals(parts[0]))
+			type = ItemType.DIRECTORY;
+		if ("file".equals(parts[0]))
+			type = ItemType.FILE;
+		if ("playlist".equals(parts[0]))
+			type = ItemType.PLAYLIST;
 		put("file", parts[1].trim());
 	}
-	
-	public void add(String _text) {
+
+	public void add(String _text)
+	{
 		String[] parts = _text.split(":", 2);
 		put(parts[0].trim(), parts[1].trim());
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		String[] parts = get("file").split("/");
 		return parts[parts.length - 1];
 	}
 
-	public ItemType getType() { return type; }
-	
+	public ItemType getType()
+	{
+		return type;
+	}
+
 }

@@ -27,34 +27,52 @@ import android.content.DialogInterface;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 import bitendian.bitmpc.activity.BitMPC;
 
-public class PlayURLDialog extends AlertDialog {
+public class PlayURLDialog extends AlertDialog
+{
 
 	private final EditText input;
-	
-	public PlayURLDialog(final BitMPC _context) {
+
+	public PlayURLDialog(final BitMPC _context)
+	{
 		super(_context);
-		setTitle(_context.getString(R.string.app_name));  
+		setTitle(_context.getString(R.string.app_name));
 		setMessage(_context.getString(R.string.input_url));
 		input = new EditText(getContext());
-		
+
 		input.setOnKeyListener(new android.view.View.OnKeyListener() {
-			
-			public boolean onKey(View _v, int _keyCode, KeyEvent _event) {
-				if (_keyCode == KeyEvent.KEYCODE_ENTER && _event.getAction() == KeyEvent.ACTION_UP) {
-					_context.handler.addURL(input.getText().toString().replace("\n", ""));
+
+			public boolean onKey(View _v, int _keyCode, KeyEvent _event)
+			{
+				if (_keyCode == KeyEvent.KEYCODE_ENTER
+						&& _event.getAction() == KeyEvent.ACTION_UP)
+				{
+					_context.handler.addURL(input.getText().toString()
+							.replace("\n", ""));
 					dismiss();
 					return true;
 				}
 				return false;
 			}
 		});
-		
+
 		setView(input);
-		setButton(_context.getString(android.R.string.ok), new OnClickListener() { public void onClick(DialogInterface dialog, int which) { _context.handler.addURL(input.getText().toString()); } });
-		setButton2(_context.getString(android.R.string.cancel), new OnClickListener() { public void onClick(DialogInterface dialog, int which) { dismiss(); } }); 
+		setButton(_context.getString(android.R.string.ok),
+				new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which)
+					{
+						_context.handler.addURL(input.getText().toString());
+					}
+				});
+		setButton2(_context.getString(android.R.string.cancel),
+				new OnClickListener() {
+					public void onClick(DialogInterface dialog, int which)
+					{
+						dismiss();
+					}
+				});
 	}
 
 }

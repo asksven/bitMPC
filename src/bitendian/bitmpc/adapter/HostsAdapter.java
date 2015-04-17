@@ -32,7 +32,6 @@ import android.widget.CheckedTextView;
 import bitendian.bitmpc.activity.BitMPC;
 import bitendian.bitmpc.main.HostItem;
 
-
 /**
  * Hosts
  * 
@@ -41,73 +40,102 @@ import bitendian.bitmpc.main.HostItem;
  * @author juanan
  *
  */
-public class HostsAdapter extends BitMPCAdapter<HostItem> {
+public class HostsAdapter extends BitMPCAdapter<HostItem>
+{
 
 	// current host, -1 stands for no current host
 	private int current;
-	
-	public HostsAdapter(BitMPC _context) {
+
+	public HostsAdapter(BitMPC _context)
+	{
 		super(_context);
 		current = -1;
 	}
 
-	public void addItem(HostItem _item) {
+	public void addItem(HostItem _item)
+	{
 		super.addItem(_item);
-		if (current == -1) current = getCount() - 1;
+		if (current == -1)
+			current = getCount() - 1;
 		notifyDataSetChanged();
 	}
-	
-	public HostItem getCurrent() { return current == -1 ? null : getTItem(current); }
-	
-	public int getCurrentPosition() { return current; }
-	
+
+	public HostItem getCurrent()
+	{
+		return current == -1 ? null : getTItem(current);
+	}
+
+	public int getCurrentPosition()
+	{
+		return current;
+	}
+
 	/**
 	 * Set current host identified by position.
-	 * @param _current host position.
+	 * 
+	 * @param _current
+	 *            host position.
 	 */
-	public void setCurrent(int _current) { 
+	public void setCurrent(int _current)
+	{
 		current = _current;
 		notifyDataSetChanged();
 	}
 
 	@Override
-	protected void saveAttributes(ObjectOutputStream _os) {
+	protected void saveAttributes(ObjectOutputStream _os)
+	{
 		super.saveAttributes(_os);
-		try {
+		try
+		{
 			_os.writeInt(current);
-		} catch (IOException _e) {
+		} catch (IOException _e)
+		{
 			// TODO Auto-generated catch block
 			_e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	protected void restoreAttributes(ObjectInputStream _is) {
+	protected void restoreAttributes(ObjectInputStream _is)
+	{
 		// TODO Auto-generated method stub
 		super.restoreAttributes(_is);
-		try {
+		try
+		{
 			current = _is.readInt();
-		} catch (OptionalDataException _e) {
+		} catch (OptionalDataException _e)
+		{
 			// TODO Auto-generated catch block
 			_e.printStackTrace();
-		} catch (IOException _e) {
+		} catch (IOException _e)
+		{
 			// TODO Auto-generated catch block
 			_e.printStackTrace();
 		}
 	}
-	
-	public void removeItem(int _host) {
+
+	public void removeItem(int _host)
+	{
 		super.removeItem(_host);
-		if (current >= _host) current--;
+		if (current >= _host)
+			current--;
 		notifyDataSetChanged();
 	}
 
 	@Override
-	protected String getFilename() { return "hosts.data"; }
+	protected String getFilename()
+	{
+		return "hosts.data";
+	}
 
 	@Override
-	protected View getView(int _position, HostItem _item, View _view) {
-		CheckedTextView v = (CheckedTextView) (_view == null ? getContext().getLayoutInflater().inflate(android.R.layout.simple_list_item_single_choice, null) : _view);
+	protected View getView(int _position, HostItem _item, View _view)
+	{
+		CheckedTextView v = (CheckedTextView) (_view == null ? getContext()
+				.getLayoutInflater().inflate(
+						android.R.layout.simple_list_item_single_choice, null)
+				: _view);
 		v.setText(_item.toString());
 		v.setChecked(getTItem(current) == _item);
 		return v;

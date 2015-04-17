@@ -26,22 +26,28 @@ import android.content.Context;
 import bitendian.bitmpc.adapter.PlaylistItemAdapter;
 import bitendian.bitmpc.main.PlaylistItem;
 
-public class PlaylistGestureListView extends GestureListView {
+public class PlaylistGestureListView extends GestureListView
+{
 
-	public PlaylistGestureListView(Context _context) {
+	public PlaylistGestureListView(Context _context)
+	{
 		super(_context);
 	}
 
 	@Override
-	protected void swap(int _first, int _second) {
+	protected void swap(int _first, int _second)
+	{
 		PlaylistItemAdapter adapter = (PlaylistItemAdapter) getAdapter();
-		PlaylistItem secondclon = (PlaylistItem) adapter.getTItem(_second).clone();
+		PlaylistItem secondclon = (PlaylistItem) adapter.getTItem(_second)
+				.clone();
 		PlaylistItem first = (PlaylistItem) adapter.getTItem(_first);
 		PlaylistItem second = adapter.getTItem(_second);
 		second.clear();
-		for (String key : first.keySet()) second.put(key, first.get(key));
+		for (String key : first.keySet())
+			second.put(key, first.get(key));
 		first.clear();
-		for (String key : secondclon.keySet()) first.put(key, secondclon.get(key));
+		for (String key : secondclon.keySet())
+			first.put(key, secondclon.get(key));
 		adapter.notifyDataSetChanged();
 	}
 

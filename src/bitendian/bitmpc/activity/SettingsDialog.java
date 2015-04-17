@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.WindowManager.LayoutParams;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 
 /**
  * 
@@ -39,50 +39,67 @@ import bitendian.bitmpc.R;
  * @author juanan
  *
  */
-public class SettingsDialog extends Dialog {
+public class SettingsDialog extends Dialog
+{
 
 	public static final String SETTING_VIBRATION = "vibration";
 	public static final String SETTING_PLAYONADD = "playonadd";
 	public static final String SETTING_STATUS = "status";
 	private SharedPreferences preferences;
-	
+
 	private android.view.View.OnClickListener listener = new android.view.View.OnClickListener() {
-		
-		public void onClick(View _v) {
-			switch (_v.getId()) {
+
+		public void onClick(View _v)
+		{
+			switch (_v.getId())
+			{
 			case R.id.settings_button_ok:
 				Editor edit = preferences.edit();
-				edit.putBoolean(SETTING_VIBRATION, ((CheckBox) findViewById(R.id.settings_vibration)).isChecked());
-				edit.putBoolean(SETTING_PLAYONADD, ((CheckBox) findViewById(R.id.settings_playonadd)).isChecked());
-				edit.putInt(SETTING_STATUS, Integer.parseInt(((EditText) findViewById(R.id.settings_refresh_time)).getText().toString()));
+				edit.putBoolean(SETTING_VIBRATION,
+						((CheckBox) findViewById(R.id.settings_vibration))
+								.isChecked());
+				edit.putBoolean(SETTING_PLAYONADD,
+						((CheckBox) findViewById(R.id.settings_playonadd))
+								.isChecked());
+				edit.putInt(
+						SETTING_STATUS,
+						Integer.parseInt(((EditText) findViewById(R.id.settings_refresh_time))
+								.getText().toString()));
 				System.out.println("el resultado del commit " + edit.commit());
 			}
 			dismiss();
 		}
 	};
-	
-	public SettingsDialog(BitMPC _context) { 
-		super(_context); 
+
+	public SettingsDialog(BitMPC _context)
+	{
+		super(_context);
 		preferences = _context.getPreferences();
 	}
 
 	@Override
-	protected void onCreate(Bundle _savedInstanceState) {
+	protected void onCreate(Bundle _savedInstanceState)
+	{
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.settings);
 
-		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		getWindow().setLayout(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
 
-		((CheckBox) findViewById(R.id.settings_vibration)).setChecked(preferences.getBoolean(SETTING_VIBRATION, true));
-		((CheckBox) findViewById(R.id.settings_playonadd)).setChecked(preferences.getBoolean(SETTING_PLAYONADD, false));
-		((EditText) findViewById(R.id.settings_refresh_time)).setText("" + preferences.getInt(SETTING_STATUS, 1000));
-		
+		((CheckBox) findViewById(R.id.settings_vibration))
+				.setChecked(preferences.getBoolean(SETTING_VIBRATION, true));
+		((CheckBox) findViewById(R.id.settings_playonadd))
+				.setChecked(preferences.getBoolean(SETTING_PLAYONADD, false));
+		((EditText) findViewById(R.id.settings_refresh_time)).setText(""
+				+ preferences.getInt(SETTING_STATUS, 1000));
+
 		addListeners();
 	}
 
-	private void addListeners() {
+	private void addListeners()
+	{
 		findViewById(R.id.settings_button_ok).setOnClickListener(listener);
 		findViewById(R.id.settings_button_cancel).setOnClickListener(listener);
 	}
-	
+
 }

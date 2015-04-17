@@ -22,14 +22,19 @@
  */
 package bitendian.bitmpc.connection;
 
-class Command {
+class Command
+{
 
-	public enum Response { ACK, PLAYLIST, PLAYLIST_UPDATE, STATUS, BROWSE, SEARCH }; 
+	public enum Response
+	{
+		ACK, PLAYLIST, PLAYLIST_UPDATE, STATUS, BROWSE, SEARCH
+	};
 
-	String command; 
-	Response response; 
+	String command;
+	Response response;
 
-	Command(String _command, Response _response) {
+	Command(String _command, Response _response)
+	{
 		command = _command;
 		response = _response;
 	}

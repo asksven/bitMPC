@@ -25,34 +25,50 @@ package bitendian.bitmpc.adapter;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 import bitendian.bitmpc.activity.BitMPC;
 import bitendian.bitmpc.main.RSSItem;
 
-public class RSSItemAdapter extends BitMPCAdapter<RSSItem> {
+public class RSSItemAdapter extends BitMPCAdapter<RSSItem>
+{
 
-	public RSSItemAdapter(BitMPC _context) { super(_context); }
+	public RSSItemAdapter(BitMPC _context)
+	{
+		super(_context);
+	}
 
-	public void addItem(RSSItem _item) { 
+	public void addItem(RSSItem _item)
+	{
 		super.addItem(_item);
 	}
 
 	@Override
-	protected View getView(int _position, RSSItem _item, View _view) {
-		if (_view == null) _view = getContext().getLayoutInflater().inflate(R.layout.image_listitem, null);
-		ImageView image = (ImageView) _view.findViewById(R.id.image_listitem_image);
-		if (_item.getImage() == null) {
+	protected View getView(int _position, RSSItem _item, View _view)
+	{
+		if (_view == null)
+			_view = getContext().getLayoutInflater().inflate(
+					R.layout.image_listitem, null);
+		ImageView image = (ImageView) _view
+				.findViewById(R.id.image_listitem_image);
+		if (_item.getImage() == null)
+		{
 			image.setVisibility(View.GONE);
-		} else {
+		} else
+		{
 			image.setVisibility(View.VISIBLE);
 			image.setImageDrawable(_item.getImage());
 		}
-		((TextView) _view.findViewById(R.id.image_listitem_main)).setText(_item.toString());
-		((TextView) _view.findViewById(R.id.image_listitem_sub)).setText(_item.getDescription());
+		((TextView) _view.findViewById(R.id.image_listitem_main)).setText(_item
+				.toString());
+		((TextView) _view.findViewById(R.id.image_listitem_sub)).setText(_item
+				.getDescription());
 		return _view;
 	}
 
 	@Override
-	protected String getFilename() { return "rss.data"; }
-	
+	protected String getFilename()
+	{
+		return "rss.data";
+	}
+
 }

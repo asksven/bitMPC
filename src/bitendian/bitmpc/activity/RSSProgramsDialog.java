@@ -29,33 +29,48 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 import bitendian.bitmpc.adapter.RSSItemAdapter;
 import bitendian.bitmpc.main.RSSItem;
 
-public class RSSProgramsDialog extends Dialog {
+public class RSSProgramsDialog extends Dialog
+{
 
 	private BitMPCHandler handler;
 	RSSItemAdapter programs;
-	
+
 	@Override
-	protected void onCreate(Bundle _savedInstanceState) {
+	protected void onCreate(Bundle _savedInstanceState)
+	{
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.rssprograms);
-		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
+		getWindow().setLayout(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
 
 		programs = handler.getRSSProgramAdapter();
-		
+
 		((ListView) findViewById(R.id.rssprogram_list)).setAdapter(programs);
-		
+
 		addListeners();
 	}
 
-	public RSSProgramsDialog(BitMPC _context) {
+	public RSSProgramsDialog(BitMPC _context)
+	{
 		super(_context);
 		handler = _context.handler;
 	}
-	
-	private void addListeners() { ((ListView) findViewById(R.id.rssprogram_list)).setOnItemClickListener(new OnItemClickListener() { public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long _arg3) { handler.addURL(((RSSItem) programs.getItem((int) _arg3)).getURL().toString()); } }); }
+
+	private void addListeners()
+	{
+		((ListView) findViewById(R.id.rssprogram_list))
+				.setOnItemClickListener(new OnItemClickListener() {
+					public void onItemClick(AdapterView<?> arg0, View arg1,
+							int arg2, long _arg3)
+					{
+						handler.addURL(((RSSItem) programs.getItem((int) _arg3))
+								.getURL().toString());
+					}
+				});
+	}
 
 }

@@ -23,11 +23,13 @@
 package bitendian.bitmpc.activity;
 
 import android.app.ProgressDialog;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 
-public class ProgressMessageDialog extends ProgressDialog {
+public class ProgressMessageDialog extends ProgressDialog
+{
 
-	public ProgressMessageDialog(BitMPC _context) {
+	public ProgressMessageDialog(BitMPC _context)
+	{
 		super(_context);
 		setTitle(_context.getString(R.string.app_name));
 		setCancelable(false);

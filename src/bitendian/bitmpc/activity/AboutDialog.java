@@ -28,26 +28,34 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
-import bitendian.bitmpc.R;
+import bitendian.bitmpc_asksven.R;
 
-public class AboutDialog extends Dialog {
+public class AboutDialog extends Dialog
+{
 
-	public AboutDialog(BitMPC _context) {
+	public AboutDialog(BitMPC _context)
+	{
 		super(_context);
 	}
-	
+
 	@Override
-	protected void onCreate(Bundle _savedInstanceState) {
+	protected void onCreate(Bundle _savedInstanceState)
+	{
 		super.onCreate(_savedInstanceState);
 		setContentView(R.layout.about);
-		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT);
-		findViewById(R.id.about_logo).setOnClickListener(new android.view.View.OnClickListener() {
-			
-			public void onClick(View _v) {
-				Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(getContext().getString(R.string.about_url)));
-				getContext().startActivity(browser);
-			}
-		});
+		getWindow().setLayout(LayoutParams.FILL_PARENT,
+				LayoutParams.FILL_PARENT);
+		findViewById(R.id.about_logo).setOnClickListener(
+				new android.view.View.OnClickListener() {
+
+					public void onClick(View _v)
+					{
+						Intent browser = new Intent(Intent.ACTION_VIEW, Uri
+								.parse(getContext().getString(
+										R.string.about_url)));
+						getContext().startActivity(browser);
+					}
+				});
 	}
 
 }

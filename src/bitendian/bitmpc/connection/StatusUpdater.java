@@ -25,31 +25,44 @@ package bitendian.bitmpc.connection;
 import bitendian.bitmpc.activity.BitMPC;
 import bitendian.bitmpc.activity.SettingsDialog;
 
-
-public class StatusUpdater extends Thread {
+public class StatusUpdater extends Thread
+{
 
 	private static BitMPC context;
 	private int time;
 	private Connection connection;
-	
-	public StatusUpdater(BitMPC _context, Connection _connection) {
+
+	public StatusUpdater(BitMPC _context, Connection _connection)
+	{
 		connection = _connection;
 		context = _context;
-		time = context.getPreferences().getInt(SettingsDialog.SETTING_STATUS, 1000);
+		time = context.getPreferences().getInt(SettingsDialog.SETTING_STATUS,
+				1000);
 	}
-	
+
 	private boolean running = false;
-	
+
 	@Override
-	public void run() {
+	public void run()
+	{
 		running = true;
-		while (running) {
+		while (running)
+		{
 			connection.doStatus();
-			try { sleep(context.getPreferences().getInt(SettingsDialog.SETTING_STATUS, time)); } 
-			catch (InterruptedException e) { e.printStackTrace(); }
+			try
+			{
+				sleep(context.getPreferences().getInt(
+						SettingsDialog.SETTING_STATUS, time));
+			} catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
-	
-	public void end() { running = false; }
-	
+
+	public void end()
+	{
+		running = false;
+	}
+
 }
