@@ -145,19 +145,22 @@ public class Connection extends Thread
 	{
 		try
 		{
-			String ip = host.ip[0] + "." + host.ip[1] + "." + host.ip[2] + "."
-					+ host.ip[3];
+			if ((host.getHost() == null) || (host.getHost().equals("")))
+			{
+				return;
+			}
+			String ip = host.getHost();
 			socket = new Socket();
-			socket.connect(new InetSocketAddress(ip, host.port), 5000);
+			socket.connect(new InetSocketAddress(ip, host.getPort()), 5000);
 			in = new BufferedReader(new InputStreamReader(
 					socket.getInputStream()));
 			out = new BufferedWriter(new OutputStreamWriter(
 					socket.getOutputStream()));
 			if (in.readLine().startsWith("OK"))
 			{
-				if (host.auth)
+				if (host.requiresAuth())
 				{
-					out.write("password " + host.password + "\n");
+					out.write("password " + host.getPassword() + "\n");
 					out.flush();
 					if (!in.readLine().startsWith("OK"))
 						handler.sendMessage(Message.obtain(handler,

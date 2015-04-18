@@ -64,45 +64,22 @@ public class HostDialog extends Dialog
 
 		private void readNewAddress()
 		{
-			String[] ip = new String[4];
-			ip[0] = ((EditText) findViewById(R.id.connection_ip0)).getText()
-					.toString();
-			ip[1] = ((EditText) findViewById(R.id.connection_ip1)).getText()
-					.toString();
-			ip[2] = ((EditText) findViewById(R.id.connection_ip2)).getText()
-					.toString();
-			ip[3] = ((EditText) findViewById(R.id.connection_ip3)).getText()
-					.toString();
+
 			host = new HostItem(
-					((EditText) findViewById(R.id.connection_name)).getText()
-							.toString(),
-					ip,
-					Integer.parseInt(((EditText) findViewById(R.id.connection_port))
-							.getText().toString()),
-					((EditText) findViewById(R.id.connection_password))
-							.getText().toString(),
+					((EditText) findViewById(R.id.connection_name)).getText().toString(),
+							((EditText) findViewById(R.id.connection_host)).getText().toString(),
+					Integer.parseInt(((EditText) findViewById(R.id.connection_port)).getText().toString()),
+					((EditText) findViewById(R.id.connection_password)).getText().toString(),
 					((CheckBox) findViewById(R.id.connection_auth)).isChecked());
 		}
 
 		private void updateAddress()
 		{
-			host.name = ((EditText) findViewById(R.id.connection_name))
-					.getText().toString();
-			host.ip[0] = ((EditText) findViewById(R.id.connection_ip0))
-					.getText().toString();
-			host.ip[1] = ((EditText) findViewById(R.id.connection_ip1))
-					.getText().toString();
-			host.ip[2] = ((EditText) findViewById(R.id.connection_ip2))
-					.getText().toString();
-			host.ip[3] = ((EditText) findViewById(R.id.connection_ip3))
-					.getText().toString();
-			host.port = Integer
-					.parseInt(((EditText) findViewById(R.id.connection_port))
-							.getText().toString());
-			host.password = ((EditText) findViewById(R.id.connection_password))
-					.getText().toString();
-			host.auth = ((CheckBox) findViewById(R.id.connection_auth))
-					.isChecked();
+			host.setName(((EditText) findViewById(R.id.connection_name)).getText().toString());
+			host.setHost(((EditText) findViewById(R.id.connection_host)).getText().toString());
+			host.setPort(Integer.parseInt(((EditText) findViewById(R.id.connection_port)).getText().toString()));
+			host.setPassword(((EditText) findViewById(R.id.connection_password)).getText().toString());
+			host.setRequiresAuth(((CheckBox) findViewById(R.id.connection_auth)).isChecked());
 		}
 
 		private void readAddress()
@@ -164,22 +141,16 @@ public class HostDialog extends Dialog
 		host = _host;
 		super.show();
 		((EditText) findViewById(R.id.connection_name))
-				.setText(host == null ? "" : host.name);
-		((EditText) findViewById(R.id.connection_ip0))
-				.setText(host == null ? "" : host.ip[0]);
-		((EditText) findViewById(R.id.connection_ip1))
-				.setText(host == null ? "" : host.ip[1]);
-		((EditText) findViewById(R.id.connection_ip2))
-				.setText(host == null ? "" : host.ip[2]);
-		((EditText) findViewById(R.id.connection_ip3))
-				.setText(host == null ? "" : host.ip[3]);
+				.setText(host == null ? "" : host.getName());
+		((EditText) findViewById(R.id.connection_host))
+				.setText(host == null ? "" : host.getHost());
 		((EditText) findViewById(R.id.connection_port))
-				.setText(host == null ? "6600" : "" + host.port);
+				.setText(host == null ? "6600" : "" + host.getPort());
 		((CheckBox) findViewById(R.id.connection_auth))
-				.setChecked(host == null ? false : host.auth);
+				.setChecked(host == null ? false : host.requiresAuth());
 		EditText password = (EditText) findViewById(R.id.connection_password);
-		password.setText(host == null ? "" : host.password);
-		password.setEnabled(host == null ? false : host.auth);
+		password.setText(host == null ? "" : host.getPassword());
+		password.setEnabled(host == null ? false : host.requiresAuth());
 	}
 
 	public void setAddress(HostItem _host)

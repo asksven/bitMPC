@@ -700,7 +700,7 @@ public class BitMPC extends Activity
 	void raiseConnectProgressDialog(HostItem _host)
 	{
 		raiseProgressDialog(getString(R.string.progress_connecting) + " "
-				+ _host.name);
+				+ _host.getName());
 	}
 
 	void raiseRSSProgressDialog()

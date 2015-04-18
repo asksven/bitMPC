@@ -32,26 +32,78 @@ public class HostItem implements Serializable
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public String name;
+	private String name;
 
-	public String[] ip;
+	//private String[] ip;
+	private String host;
 
-	public String password;
+	private String password;
 
-	public int port;
+	private int port;
 
-	public boolean auth;
+	private boolean auth;
 
-	public HostItem(String _name, String[] _ip, int _port, String _password,
+	public HostItem(String _name, String _host, int _port, String _password,
 			boolean _auth)
 	{
 		name = _name;
-		ip = _ip;
+		//ip = _ip;
+		host = _host;
 		port = _port;
 		password = _password;
 		auth = _auth;
 	}
 
+	public String getHost()
+	{
+		return host;
+	}
+	
+	public void setHost(String _host)
+	{
+		host = _host;
+	}
+	
+	public int getPort()
+	{
+		return port;
+	}
+	
+	public void setPort(int _port)
+	{
+		port = _port;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public void setName(String _name)
+	{
+		name = _name;
+	}
+	
+	public String getPassword()
+	{
+		return password;
+	}
+	
+	public void setPassword(String _password)
+	{
+		password = _password;
+	}
+	
+	public boolean requiresAuth()
+	{
+		return auth;
+	}
+	
+	public void setRequiresAuth(boolean _auth)
+	{
+		auth = _auth;
+	}
+	
 	@Override
 	public String toString()
 	{
